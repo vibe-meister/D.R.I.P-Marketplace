@@ -179,7 +179,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="glass rounded-xl p-6 text-center">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Users className="w-6 h-6 text-white" />
             </div>
             <div className="text-2xl font-bold gradient-text mb-2">{stats?.activeCreators}</div>
@@ -187,7 +187,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="glass rounded-xl p-6 text-center">
-            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Eye className="w-6 h-6 text-white" />
             </div>
             <div className="text-2xl font-bold gradient-text mb-2">{stats?.totalContent}</div>
