@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Creator {
+  id        String   @id @default(cuid())
+  walletAddress String @unique
+  username String   @unique
+  email    String?  @unique
+  bio      String?
+  avatar   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  content  Content[]
+  purchases Purchase[]
+  earnings  Earnings[]
+
+  @@map("creators")
+}
+
+model Content {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Float    // Price in ETH
+  category    String
+  fileUrl     String   // IPFS or cloud storage URL
+  thumbnailUrl String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  creatorId   String
+  creator     Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  purchases   Purchase[]
+
+  @@map("content")
+}
+
+model Purchase {
+  id              String   @id @default(cuid())
+  transactionHash String   @unique
+  buyerAddress    String
+  amount          Float    // Amount paid in ETH
+  platformFee     Float    // Platform fee (5%)
+  creatorEarnings Float    // Amount creator receives
+  status          String   @default("pending") // pending, confirmed, failed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  contentId String
+  content   Content @relation(fields: [contentId], references: [id])
+  buyerId   String
+  buyer     Creator @relation(fields: [buyerId], references: [id])
+
+  @@map("purchases")
+}
+
+model Earnings {
+  id        String   @id @default(cuid())
+  amount    Float    // Amount earned
+  source    String   // "content_sale", "bonus", etc.
+  status    String   @default("pending_payout") // "pending_payout", "paid"
+  createdAt DateTime @default(now())
+  paidAt    DateTime?
+
+  // Relations
+  creatorId String
+  creator   Creator @relation(fields: [creatorId], references: [id])
+
+  @@map("earnings")
+}
+
+model UserLibrary {
+  id        String   @id @default(cuid())
+  walletAddress String
+  contentId String
+  purchaseId String
+  accessUrl  String   // URL to access the content
+  createdAt DateTime @default(now())
+
+  @@map("user_library")
+}
