@@ -6,11 +6,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
 export async function POST(request: NextRequest) {
   try {
-    const { walletAddress, username, email, bio } = await request.json()
+    const { walletAddress } = await request.json()
 
-    if (!walletAddress || !username) {
+    if (!walletAddress) {
       return NextResponse.json(
-        { error: 'Wallet address and username are required' },
+        { error: 'Wallet address is required' },
         { status: 400 }
       )
     }
@@ -21,13 +21,13 @@ export async function POST(request: NextRequest) {
     })
 
     if (!creator) {
-      // Create new creator
+      // Create new creator with auto-generated username
       creator = await prisma.creator.create({
         data: {
           walletAddress,
-          username,
-          email,
-          bio
+          username: `Creator_${walletAddress.slice(0, 6)}`,
+          email: null,
+          bio: null
         }
       })
     }

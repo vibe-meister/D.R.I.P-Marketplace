@@ -1,13 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
+  // Only use static export for production builds
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    trailingSlash: true,
+    assetPrefix: '/D.R.I.P-Marketplace',
+    basePath: '/D.R.I.P-Marketplace',
+  }),
   images: {
     unoptimized: true,
     domains: ['images.unsplash.com', 'via.placeholder.com'],
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/D.R.I.P-Marketplace' : '',
-  basePath: process.env.NODE_ENV === 'production' ? '/D.R.I.P-Marketplace' : '',
 }
 
 module.exports = nextConfig

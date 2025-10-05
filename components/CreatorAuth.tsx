@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useWallet } from './WalletProvider'
-import { CheckCircle, AlertCircle, User, Mail, FileText } from 'lucide-react'
+import { CheckCircle, AlertCircle, Wallet } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface CreatorAuthProps {
@@ -11,22 +11,12 @@ interface CreatorAuthProps {
 }
 
 export default function CreatorAuth({ onAuthSuccess }: CreatorAuthProps) {
-  const { account, isConnected } = useWallet()
+  const { account, isConnected, connectWallet } = useWallet()
   const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    bio: ''
-  })
 
   const handleAuth = async () => {
     if (!isConnected || !account) {
       toast.error('Please connect your MetaMask wallet first')
-      return
-    }
-
-    if (!formData.username.trim()) {
-      toast.error('Username is required')
       return
     }
 
@@ -39,120 +29,140 @@ export default function CreatorAuth({ onAuthSuccess }: CreatorAuthProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          walletAddress: account,
-          username: formData.username,
-          email: formData.email || null,
-          bio: formData.bio || null
+          walletAddress: account
         })
       })
 
       const data = await response.json()
 
       if (data.success) {
-        toast.success('Creator account created successfully!')
+        // Store token in localStorage
+        localStorage.setItem('creatorToken', data.token)
+        localStorage.setItem('creatorData', JSON.stringify(data.creator))
+        
+        toast.success('Successfully authenticated as creator!')
         onAuthSuccess(data.creator, data.token)
       } else {
-        toast.error(data.error || 'Failed to create creator account')
+        throw new Error(data.error || 'Authentication failed')
       }
+
     } catch (error) {
-      console.error('Auth error:', error)
-      toast.error('Failed to authenticate creator')
+      console.error('Creator auth error:', error)
+      toast.error('Failed to authenticate. Please try again.')
     } finally {
       setIsLoading(false)
     }
   }
 
-  if (!isConnected) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-xl p-6 border border-red-500/30"
-      >
-        <div className="flex items-center space-x-3 text-red-400 mb-4">
-          <AlertCircle className="w-6 h-6" />
-          <span className="text-lg font-semibold">Wallet Required</span>
-        </div>
-        <p className="text-red-300 mb-4">
-          You need to connect your MetaMask wallet to create content. This ensures you can receive payments directly to your wallet.
-        </p>
-      </motion.div>
-    )
-  }
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-xl p-6 border border-teal-500/30"
-    >
-      <div className="flex items-center space-x-3 text-teal-400 mb-4">
-        <CheckCircle className="w-6 h-6" />
-        <span className="text-lg font-semibold">Wallet Connected</span>
-      </div>
-      <p className="text-teal-300 mb-6">
-        Connected: {account?.slice(0, 6)}...{account?.slice(-4)}
-      </p>
-
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-semibold text-white mb-2">
-            Username *
-          </label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-5 h-5" />
-            <input
-              type="text"
-              value={formData.username}
-              onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-              placeholder="Enter your username"
-              className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-teal-500 transition-colors"
-            />
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="glass rounded-3xl p-8 max-w-md w-full"
+      >
+        <div className="text-center mb-8">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="w-20 h-20 mx-auto bg-gradient-to-r from-teal-500 to-pink-500 rounded-full flex items-center justify-center mb-6"
+          >
+            <Wallet className="w-10 h-10 text-white" />
+          </motion.div>
+          
+          <h1 className="text-3xl font-bold gradient-text mb-4">
+            Creator Authentication
+          </h1>
+          <p className="text-white/60">
+            Connect your MetaMask wallet to start creating and selling content
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-white mb-2">
-            Email (Optional)
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-5 h-5" />
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              placeholder="Enter your email"
-              className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-teal-500 transition-colors"
-            />
-          </div>
-        </div>
+        {!isConnected ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-6"
+          >
+            <div className="bg-white/5 rounded-lg p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-white mb-4">Why Connect Your Wallet?</h3>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-white font-medium">Secure Identity</div>
+                    <div className="text-white/60 text-sm">Your wallet address is your unique creator identity</div>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-white font-medium">Direct Payments</div>
+                    <div className="text-white/60 text-sm">Receive payments directly to your wallet</div>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-white font-medium">Content Ownership</div>
+                    <div className="text-white/60 text-sm">Full control over your content and earnings</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-white mb-2">
-            Bio (Optional)
-          </label>
-          <div className="relative">
-            <FileText className="absolute left-3 top-3 text-white/40 w-5 h-5" />
-            <textarea
-              value={formData.bio}
-              onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-              placeholder="Tell us about yourself..."
-              rows={3}
-              className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-teal-500 transition-colors resize-none"
-            />
-          </div>
-        </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={connectWallet}
+              className="w-full btn-primary text-lg py-4 flex items-center justify-center space-x-2"
+            >
+              <Wallet className="w-5 h-5" />
+              <span>Connect MetaMask Wallet</span>
+            </motion.button>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-6"
+          >
+            <div className="bg-white/5 rounded-lg p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-white font-medium">Wallet Connected</span>
+              </div>
+              <div className="text-white/60 text-sm font-mono break-all">
+                {account}
+              </div>
+            </div>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleAuth}
-          disabled={isLoading || !formData.username.trim()}
-          className="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAuth}
+              disabled={isLoading}
+              className="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Authenticating...' : 'Authenticate as Creator'}
+            </motion.button>
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-8 text-center"
         >
-          {isLoading ? 'Creating Account...' : 'Create Creator Account'}
-        </motion.button>
-      </div>
-    </motion.div>
+          <p className="text-white/40 text-sm">
+            Your wallet address will be your creator identity. No additional information required.
+          </p>
+        </motion.div>
+      </motion.div>
+    </div>
   )
 }
