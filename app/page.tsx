@@ -1,385 +1,231 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { 
-  Sparkles, 
-  TrendingUp, 
-  Users, 
-  Shield, 
-  Zap,
-  ArrowRight,
-  Play,
-  Star,
-  Heart
-} from 'lucide-react'
+import { ArrowRight, Shield, Zap, Users, DollarSign, Heart } from 'lucide-react'
 import Link from 'next/link'
-import { useWallet } from '@/components/WalletProvider'
 
-export default function HomePage() {
-  const { isConnected } = useWallet()
-
-  const features = [
-    {
-      icon: Zap,
-      title: 'Instant Payments',
-      description: 'Pay creators directly with MetaMask. No intermediaries, just pure Web3 magic.',
-      color: 'from-teal-500 to-teal-600'
-    },
-    {
-      icon: Shield,
-      title: 'Secure & Decentralized',
-      description: 'Your content and payments are protected by blockchain technology.',
-      color: 'from-deepBlue-500 to-deepBlue-600'
-    },
-    {
-      icon: Users,
-      title: 'Creator Freedom',
-      description: 'Set your own prices and keep more of your earnings with lower fees.',
-      color: 'from-pink-500 to-pink-600'
-    }
-  ]
-
-  const stats = [
-    { number: '10K+', label: 'Active Creators', icon: Users },
-    { number: '$2.5M+', label: 'Total Volume', icon: TrendingUp },
-    { number: '50K+', label: 'Happy Fans', icon: Heart },
-    { number: '99.9%', label: 'Uptime', icon: Shield }
-  ]
-
-  const featuredContent = [
-    {
-      id: 1,
-      title: 'Exclusive Art Collection',
-      creator: 'CryptoArtist',
-      price: '0.5 ETH',
-      image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop',
-      category: 'Art',
-      likes: 234
-    },
-    {
-      id: 2,
-      title: 'Behind the Scenes',
-      creator: 'ContentCreator',
-      price: '0.2 ETH',
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
-      category: 'Video',
-      likes: 189
-    },
-    {
-      id: 3,
-      title: 'Premium Tutorial',
-      creator: 'TechGuru',
-      price: '0.8 ETH',
-      image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop',
-      category: 'Education',
-      likes: 456
-    }
-  ]
-
+export default function Home() {
   return (
-    <div className="pt-16">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-teal-500/20 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-20 left-1/2 w-80 h-80 bg-deepBlue-500/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Navigation */}
+      <nav className="relative z-50 p-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center space-x-3"
+          >
+            <div className="w-10 h-10 bg-gradient-to-r from-teal-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">D</span>
+            </div>
+            <span className="text-2xl font-bold gradient-text">D.R.I.P</span>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center space-x-6"
+          >
+            <Link href="/marketplace" className="text-white/60 hover:text-white transition-colors">
+              Marketplace
+            </Link>
+            <Link href="/create" className="text-white/60 hover:text-white transition-colors">
+              Create
+            </Link>
+            <Link href="/library" className="text-white/60 hover:text-white transition-colors">
+              Library
+            </Link>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-primary px-6 py-2"
+            >
+              Connect Wallet
+            </motion.button>
+          </motion.div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8"
+            className="text-center space-y-8"
           >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center space-x-2 bg-gradient-to-r from-teal-500/20 to-pink-500/20 px-4 py-2 rounded-full border border-red-500/30"
-            >
-              <Sparkles className="w-5 h-5 text-teal-400" />
-              <span className="text-sm font-medium text-white">Decentralized Revenue In Payments</span>
-            </motion.div>
-
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-5xl md:text-7xl font-bold"
+              transition={{ delay: 0.2 }}
+              className="text-6xl md:text-8xl font-bold gradient-text leading-tight"
             >
-              <span className="gradient-text">D.R.I.P</span>
+              D.R.I.P
             </motion.h1>
-
+            
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto"
+              transition={{ delay: 0.4 }}
+              className="text-2xl md:text-3xl text-white/80 max-w-4xl mx-auto"
             >
-              Drip or Dip Out: Fan-Funded Freedom on Chain
+              Decentralized Revenue In Payments
             </motion.p>
-
+            
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ delay: 0.6 }}
               className="text-lg text-white/60 max-w-2xl mx-auto"
             >
-              The future of creator economy is here. Connect your MetaMask, support your favorite creators, 
-              and experience the power of decentralized payments.
+              Fan-Funded Freedom on Chain
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
+              transition={{ delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Link href="/marketplace">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="btn-primary text-lg px-8 py-4 flex items-center space-x-2"
-                >
-                  <Play className="w-5 h-5" />
-                  <span>Explore Marketplace</span>
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
-              </Link>
-
-              {!isConnected && (
-                <Link href="/create">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="btn-secondary text-lg px-8 py-4 flex items-center space-x-2"
-                  >
-                    <span>Start Creating</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </motion.button>
-                </Link>
-              )}
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-3 bg-white/60 rounded-full mt-2"
-            />
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
-          >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center glass rounded-xl p-6 hover-glow"
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-primary text-lg px-8 py-4 flex items-center space-x-2"
               >
-                <div className="flex justify-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-pink-500 rounded-lg flex items-center justify-center">
-                    <stat.icon className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <div className="text-3xl font-bold gradient-text mb-2">{stat.number}</div>
-                <div className="text-white/60">{stat.label}</div>
-              </motion.div>
-            ))}
+                <span>Explore Marketplace</span>
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-secondary text-lg px-8 py-4"
+              >
+                Start Creating
+              </motion.button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-6">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
               Why Choose D.R.I.P?
             </h2>
             <p className="text-xl text-white/60 max-w-3xl mx-auto">
-              Experience the next generation of creator economy with Web3 technology
+              The future of content monetization is here. Secure, decentralized, and creator-focused.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Shield,
+                title: "Secure Payments",
+                description: "MetaMask integration ensures your transactions are safe and transparent."
+              },
+              {
+                icon: Zap,
+                title: "Instant Access",
+                description: "Content unlocks immediately after verified payment on the blockchain."
+              },
+              {
+                icon: Users,
+                title: "Creator Focused",
+                description: "Direct creator-to-fan relationships with fair revenue sharing."
+              },
+              {
+                icon: DollarSign,
+                title: "Transparent Fees",
+                description: "Clear 5% platform fee with 95% going directly to creators."
+              },
+              {
+                icon: Heart,
+                title: "Fan Support",
+                description: "Support your favorite creators directly through blockchain payments."
+              },
+              {
+                icon: ArrowRight,
+                title: "Easy to Use",
+                description: "Simple interface that works with your existing MetaMask wallet."
+              }
+            ].map((feature, index) => (
               <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 50 }}
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="glass rounded-xl p-8 card-hover"
+                transition={{ delay: index * 0.1 }}
+                className="glass rounded-2xl p-8 text-center group hover:scale-105 transition-transform duration-300"
               >
-                <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center mb-6`}>
+                <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-teal-500 to-pink-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                <p className="text-white/60 leading-relaxed">{feature.description}</p>
+                <p className="text-white/60">{feature.description}</p>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Featured Content */}
-      <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
-              Featured Content
-            </h2>
-            <p className="text-xl text-white/60 max-w-3xl mx-auto">
-              Discover amazing content from top creators on the platform
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredContent.map((content, index) => (
-              <motion.div
-                key={content.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="glass rounded-xl overflow-hidden card-hover"
-              >
-                <div className="relative">
-                  <img
-                    src={content.image}
-                    alt={content.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {content.category}
-                  </div>
-                  <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-1">
-                    <Heart className="w-4 h-4" />
-                    <span>{content.likes}</span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">{content.title}</h3>
-                  <p className="text-white/60 mb-4">by {content.creator}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold gradient-text">{content.price}</span>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="btn-primary"
-                    >
-                      Purchase
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <Link href="/marketplace">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-primary text-lg px-8 py-4 flex items-center space-x-2 mx-auto"
-              >
-                <span>View All Content</span>
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-            </Link>
-          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="glass rounded-2xl p-12"
+            className="glass rounded-3xl p-12"
           >
             <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
-              Ready to Drip?
+              Ready to Drip or Dip Out?
             </h2>
             <p className="text-xl text-white/60 mb-8 max-w-2xl mx-auto">
-              Join thousands of creators and fans who are already experiencing the future of content monetization.
+              Join the decentralized content revolution. Create, share, and monetize your content with complete freedom.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <Link href="/marketplace">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="btn-primary text-lg px-8 py-4 flex items-center space-x-2"
-                >
-                  <span>Start Exploring</span>
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
-              </Link>
-              <Link href="/create">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="btn-secondary text-lg px-8 py-4 flex items-center space-x-2"
-                >
-                  <span>Become a Creator</span>
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
-              </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-primary text-lg px-8 py-4"
+              >
+                Start Creating
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-secondary text-lg px-8 py-4"
+              >
+                Browse Content
+              </motion.button>
             </div>
           </motion.div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">D</span>
+            </div>
+            <span className="text-xl font-bold gradient-text">D.R.I.P</span>
+          </div>
+          <p className="text-white/40">
+            Decentralized Revenue In Payments - Fan-Funded Freedom on Chain
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }
