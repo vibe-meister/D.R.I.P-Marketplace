@@ -30,7 +30,6 @@ JWT_SECRET=drip-marketplace-super-secret-jwt-2024
 NEXT_PUBLIC_BASE_URL=https://your-app.vercel.app
 PLATFORM_WALLET_ADDRESS=0x39d36a64a1e16e52d8353eff82ace7c96502f269
 ALLOWED_ORIGINS=https://your-app.vercel.app
-ADMIN_SECRET_KEY=drip-admin-secret-2024
 ```
 
 ### **4. Database Setup**
@@ -45,7 +44,6 @@ ADMIN_SECRET_KEY=drip-admin-secret-2024
 - ✅ USDT payments
 - ✅ Content upload
 - ✅ User library
-- ✅ Admin dashboard
 - ✅ All API routes
 - ✅ Database functionality
 

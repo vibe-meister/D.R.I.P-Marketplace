@@ -92,7 +92,6 @@ PLATFORM_WALLET_ADDRESS="0x39d36a64a1e16e52d8353eff82ace7c96502f269"
 
 # Security
 ALLOWED_ORIGINS="https://your-app.vercel.app"
-ADMIN_SECRET_KEY="your-admin-secret"
 ```
 
 ## 🎯 Recommended Setup

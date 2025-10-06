@@ -45,7 +45,6 @@ PLATFORM_WALLET_ADDRESS="0x39d36a64a1e16e52d8353eff82ace7c96502f269"
 
 # Security
 ALLOWED_ORIGINS="https://your-app.vercel.app"
-ADMIN_SECRET_KEY="drip-admin-secret-2024"
 ```
 
 ### **4. Database Setup Options:**
@@ -80,7 +79,6 @@ npx prisma db push
 - ✅ Content upload
 - ✅ Payment processing
 - ✅ User library
-- ✅ Admin dashboard
 
 ## 🎯 **What Works on Vercel:**
 
@@ -92,7 +90,6 @@ npx prisma db push
 - **Payment Processing** - USDT transactions
 - **User Authentication** - JWT tokens
 - **Content Management** - Full CRUD operations
-- **Admin Dashboard** - All analytics
 
 ### **✅ Performance:**
 - **Edge Functions** - Global CDN

@@ -36,7 +36,6 @@ JWT_SECRET=drip-marketplace-super-secret-jwt-2024
 NEXT_PUBLIC_BASE_URL=https://your-app.vercel.app
 PLATFORM_WALLET_ADDRESS=0x39d36a64a1e16e52d8353eff82ace7c96502f269
 ALLOWED_ORIGINS=https://your-app.vercel.app
-ADMIN_SECRET_KEY=drip-admin-secret-2024
 ```
 
 #### **Step 5: Deploy**
@@ -68,7 +67,6 @@ ADMIN_SECRET_KEY=drip-admin-secret-2024
 4. **Marketplace:** Go to `/marketplace` → Browse content
 5. **Payment:** Click "Buy" → Test MetaMask payment
 6. **Library:** Go to `/library` → View purchased content
-7. **Admin:** Go to `/admin` → View analytics
 
 ## 🎉 **You're Done!**
 
@@ -85,7 +83,6 @@ ADMIN_SECRET_KEY=drip-admin-secret-2024
 - ✅ USDT payments
 - ✅ Content upload
 - ✅ User library
-- ✅ Admin dashboard
 - ✅ Creator dashboard
 - ✅ Payment processing
 - ✅ Database functionality

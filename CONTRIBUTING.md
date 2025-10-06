@@ -165,7 +165,6 @@ Any additional information
 - UI/UX improvements
 - Additional content types
 - Analytics features
-- Admin dashboard enhancements
 
 ### Low Priority
 - Code refactoring
