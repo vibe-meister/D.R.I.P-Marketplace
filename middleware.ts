@@ -47,14 +47,6 @@ export function middleware(request: NextRequest) {
     }
   }
   
-  // Admin route protection
-  if (pathname.startsWith('/admin')) {
-    // In production, add proper admin authentication
-    const adminToken = request.cookies.get('admin-token');
-    if (!adminToken) {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
-  }
   
   return response;
 }
@@ -62,7 +54,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/api/:path*',
-    '/admin/:path*',
     '/content/:path*'
   ]
 };

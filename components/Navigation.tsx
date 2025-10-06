@@ -26,7 +26,6 @@ export default function Navigation() {
     { name: 'Trending', href: '/trending', icon: TrendingUp },
     { name: 'Create', href: '/create', icon: Plus },
     { name: 'Library', href: '/library', icon: User },
-    { name: 'Admin', href: '/admin', icon: TrendingUp },
   ]
 
   return (
