@@ -32,7 +32,7 @@ model Content {
   id          String   @id @default(cuid())
   title       String
   description String
-  price       Float    // Price in USDC
+  price       Float    // Price in USDT
   category    String
   fileUrl     String   // IPFS or cloud storage URL
   thumbnailUrl String?
@@ -53,7 +53,7 @@ model Purchase {
   id              String   @id @default(cuid())
   transactionHash String   @unique
   buyerAddress    String
-  amount          Float    // Amount paid in USDC
+  amount          Float    // Amount paid in USDT
   platformFee     Float    // Platform fee (5%)
   creatorEarnings Float    // Amount creator receives
   status          String   @default("pending") // pending, confirmed, failed

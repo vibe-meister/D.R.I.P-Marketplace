@@ -106,13 +106,13 @@ export default function PurchaseModal({ item, onClose }: PurchaseModalProps) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Platform Fee (5%)</span>
-                <span className="text-white/60">{(parseFloat(item.price) * 0.05).toFixed(4)} USDC</span>
+                <span className="text-white/60">{(parseFloat(item.price) * 0.05).toFixed(4)} USDT</span>
               </div>
               <div className="border-t border-white/10 pt-3">
                 <div className="flex justify-between items-center">
                   <span className="text-white font-semibold">Total</span>
                   <span className="text-xl font-bold gradient-text">
-                    {(parseFloat(item.price) * 1.05).toFixed(4)} USDC
+                    {(parseFloat(item.price) * 1.05).toFixed(4)} USDT
                   </span>
                 </div>
               </div>

@@ -150,7 +150,7 @@ export default function AdminDashboard() {
             <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
               <DollarSign className="w-6 h-6 text-white" />
             </div>
-            <div className="text-2xl font-bold gradient-text mb-2">{stats?.totalRevenue} USDC</div>
+            <div className="text-2xl font-bold gradient-text mb-2">{stats?.totalRevenue} USDT</div>
             <div className="text-white/60 text-sm">Total Revenue</div>
           </div>
 
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
             <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mx-auto mb-4">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
-            <div className="text-2xl font-bold gradient-text mb-2">{stats?.platformFees} USDC</div>
+            <div className="text-2xl font-bold gradient-text mb-2">{stats?.platformFees} USDT</div>
             <div className="text-white/60 text-sm">Platform Fees</div>
           </div>
 
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
             <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Users className="w-6 h-6 text-white" />
             </div>
-            <div className="text-2xl font-bold gradient-text mb-2">{stats?.creatorPayouts} USDC</div>
+            <div className="text-2xl font-bold gradient-text mb-2">{stats?.creatorPayouts} USDT</div>
             <div className="text-white/60 text-sm">Creator Payouts</div>
           </div>
 
@@ -262,10 +262,10 @@ export default function AdminDashboard() {
                       </div>
                     </td>
                     <td className="py-4 px-2">
-                      <span className="text-teal-400 font-semibold">{tx.amount} USDC</span>
+                      <span className="text-teal-400 font-semibold">{tx.amount} USDT</span>
                     </td>
                     <td className="py-4 px-2">
-                      <span className="text-yellow-400 font-semibold">{tx.platformFee} USDC</span>
+                      <span className="text-yellow-400 font-semibold">{tx.platformFee} USDT</span>
                     </td>
                     <td className="py-4 px-2">
                       <div className="flex items-center space-x-2">
@@ -323,11 +323,11 @@ export default function AdminDashboard() {
                 <div className="bg-white/5 rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-white/60">Pending Payouts</span>
-                    <span className="text-yellow-400 font-semibold">2.5 USDC</span>
+                    <span className="text-yellow-400 font-semibold">2.5 USDT</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-white/60">Platform Fees Earned</span>
-                    <span className="text-teal-400 font-semibold">0.125 USDC</span>
+                    <span className="text-teal-400 font-semibold">0.125 USDT</span>
                   </div>
                 </div>
                 <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">

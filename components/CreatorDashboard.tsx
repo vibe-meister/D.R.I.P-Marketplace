@@ -156,7 +156,7 @@ export default function CreatorDashboard({ creator, token }: CreatorDashboardPro
     },
     {
       label: 'Earnings',
-      value: '0 USDC',
+      value: '0 USDT',
       icon: TrendingUp,
       color: 'from-green-500 to-green-600'
     }
@@ -269,7 +269,7 @@ export default function CreatorDashboard({ creator, token }: CreatorDashboardPro
                         <h4 className="text-lg font-bold text-white mb-1">{content.title}</h4>
                         <p className="text-white/60 text-sm mb-2">{content.category}</p>
                         <div className="flex items-center justify-between">
-                          <span className="text-teal-400 font-semibold">{content.price} USDC</span>
+                          <span className="text-teal-400 font-semibold">{content.price} USDT</span>
                           <div className="flex items-center space-x-2 text-white/60">
                             <Eye className="w-4 h-4" />
                             <span>0</span>
@@ -321,7 +321,7 @@ export default function CreatorDashboard({ creator, token }: CreatorDashboardPro
                             <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm">
                               {content.category}
                             </span>
-                            <span className="text-teal-400 font-semibold">{content.price} USDC</span>
+                            <span className="text-teal-400 font-semibold">{content.price} USDT</span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <motion.button
@@ -357,15 +357,15 @@ export default function CreatorDashboard({ creator, token }: CreatorDashboardPro
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-white/60">This Month</span>
-                      <span className="text-teal-400 font-semibold">0.8 USDC</span>
+                      <span className="text-teal-400 font-semibold">0.8 USDT</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Total Earnings</span>
-                      <span className="text-teal-400 font-semibold">1.2 USDC</span>
+                      <span className="text-teal-400 font-semibold">1.2 USDT</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/60">Platform Fees</span>
-                      <span className="text-red-400 font-semibold">0.06 USDC</span>
+                      <span className="text-red-400 font-semibold">0.06 USDT</span>
                     </div>
                   </div>
                 </div>
@@ -497,7 +497,7 @@ export default function CreatorDashboard({ creator, token }: CreatorDashboardPro
 
                 <div>
                   <label className="block text-sm font-semibold text-white mb-2">
-                    Price (USDC) *
+                    Price (USDT) *
                   </label>
                   <input
                     type="number"

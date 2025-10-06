@@ -52,16 +52,16 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
       const chainId = await window.ethereum.request({ method: 'eth_chainId' })
       console.log('Current chain ID:', chainId)
 
-      // Convert USDC amount to wei (assuming 6 decimals for USDC)
+      // Convert USDT amount to wei (assuming 6 decimals for USDT)
       const amountInWei = (totalAmount * Math.pow(10, 6)).toString()
       
-      // For USDC, we need to interact with the USDC contract
-      // This is a simplified version - in production you'd use the actual USDC contract
+      // For USDT, we need to interact with the USDT contract
+      // This is a simplified version - in production you'd use the actual USDT contract
       const transactionParameters = {
         to: PLATFORM_WALLET,
         from: account,
-        value: '0x0', // No ETH value for USDC transfer
-        data: '0x', // USDC transfer data would go here
+        value: '0x0', // No ETH value for USDT transfer
+        data: '0x', // USDT transfer data would go here
         gas: '0x5208', // 21000 gas limit
         gasPrice: '0x3b9aca00', // 1 gwei gas price
       }
@@ -169,7 +169,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
             <div>
               <h2 className="text-3xl font-bold gradient-text mb-4">Connect Your Wallet</h2>
               <p className="text-white/60 mb-6">
-                Connect your MetaMask wallet to make a secure USDC payment
+                Connect your MetaMask wallet to make a secure USDT payment
               </p>
             </div>
 
@@ -180,7 +180,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                   <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="text-white font-medium">Secure Payments</div>
-                    <div className="text-white/60 text-sm">Direct USDC transfer through MetaMask</div>
+                    <div className="text-white/60 text-sm">Direct USDT transfer through MetaMask</div>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -230,7 +230,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
             <div className="text-center">
               <h2 className="text-3xl font-bold gradient-text mb-4">Complete Payment</h2>
               <p className="text-white/60">
-                MetaMask will prompt you to send USDC to complete your purchase
+                MetaMask will prompt you to send USDT to complete your purchase
               </p>
             </div>
 
@@ -241,7 +241,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                     Content Price
                   </label>
                   <div className="bg-white/10 rounded-lg p-3 text-white font-semibold">
-                    {price} USDC
+                    {price} USDT
                   </div>
                 </div>
                 <div>
@@ -249,7 +249,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                     Platform Fee (5%)
                   </label>
                   <div className="bg-white/10 rounded-lg p-3 text-white font-semibold">
-                    {platformFee.toFixed(4)} USDC
+                    {platformFee.toFixed(4)} USDT
                   </div>
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                 </label>
                 <div className="bg-gradient-to-r from-teal-500/20 to-pink-500/20 border border-teal-500/30 rounded-lg p-4">
                   <div className="text-2xl font-bold gradient-text text-center">
-                    {totalAmount.toFixed(4)} USDC
+                    {totalAmount.toFixed(4)} USDT
                   </div>
                 </div>
               </div>
@@ -273,7 +273,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                   <h4 className="text-blue-400 font-semibold mb-2">Payment Process:</h4>
                   <ul className="text-blue-300 text-sm space-y-1">
                     <li>• MetaMask will open automatically</li>
-                    <li>• Confirm the USDC transfer</li>
+                    <li>• Confirm the USDT transfer</li>
                     <li>• Wait for transaction confirmation</li>
                     <li>• Content will unlock automatically</li>
                   </ul>
@@ -387,7 +387,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
               </div>
               <div className="flex justify-between">
                 <span className="text-white/60">Amount Paid:</span>
-                <span className="text-teal-400">{totalAmount.toFixed(4)} USDC</span>
+                <span className="text-teal-400">{totalAmount.toFixed(4)} USDT</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-white/60">Content Unlocked:</span>

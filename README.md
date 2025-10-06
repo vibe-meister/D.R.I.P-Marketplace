@@ -2,7 +2,7 @@
 
 **Drip or Dip Out: Fan-Funded Freedom on Chain**
 
-A modern Web3 marketplace for creators to monetize their content through USDC payments on BNB Smart Chain or Ethereum mainnet. Built with Next.js, TypeScript, Tailwind CSS, and Framer Motion.
+A modern Web3 marketplace for creators to monetize their content through USDT payments on BNB Smart Chain or Ethereum mainnet. Built with Next.js, TypeScript, Tailwind CSS, and Framer Motion.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
@@ -21,9 +21,9 @@ A modern Web3 marketplace for creators to monetize their content through USDC pa
 
 ## 🎯 Business Model
 
-- **Creators** upload content and set prices in USDC
+- **Creators** upload content and set prices in USDT
 - **Platform** hosts content and adds 5% fee
-- **Buyers** pay USDC through MetaMask to platform wallet (BNB/ETH mainnet)
+- **Buyers** pay USDT through MetaMask to platform wallet (BNB/ETH mainnet)
 - **Platform** pays creators from their wallet
 - **No identity verification** required
 
