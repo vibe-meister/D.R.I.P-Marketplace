@@ -21,7 +21,7 @@ interface Creator {
   username: string
   walletAddress: string
   content: any[]
-  _count: {
+  _count?: {
     content: number
     purchases: number
   }
@@ -138,27 +138,27 @@ export default function CreatorDashboard({ creator, token }: CreatorDashboardPro
   const stats = [
     {
       label: 'Total Content',
-      value: creator._count.content,
+      value: creator._count?.content || creator.content?.length || 0,
       icon: Upload,
       color: 'from-teal-500 to-teal-600'
     },
     {
       label: 'Total Sales',
-      value: creator._count.purchases,
+      value: creator._count?.purchases || 0,
       icon: DollarSign,
       color: 'from-pink-500 to-pink-600'
     },
     {
       label: 'Total Views',
-      value: '2.5K',
+      value: creator.content?.length || 0,
       icon: Eye,
-      color: 'from-deepBlue-500 to-deepBlue-600'
+      color: 'from-blue-500 to-blue-600'
     },
     {
       label: 'Earnings',
-      value: '1.2 ETH',
+      value: '0 ETH',
       icon: TrendingUp,
-      color: 'from-yellow-500 to-orange-500'
+      color: 'from-green-500 to-green-600'
     }
   ]
 
