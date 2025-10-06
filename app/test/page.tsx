@@ -4,10 +4,19 @@ import { useState } from 'react'
 import { useWallet } from '@/components/WalletProvider'
 import toast from 'react-hot-toast'
 
+interface Creator {
+  id: string
+  username: string
+  walletAddress: string
+  email?: string | null
+  bio?: string | null
+  avatar?: string | null
+}
+
 export default function TestPage() {
   const { account, isConnected, connectWallet } = useWallet()
   const [isLoading, setIsLoading] = useState(false)
-  const [creator, setCreator] = useState(null)
+  const [creator, setCreator] = useState<Creator | null>(null)
 
   const testCreatorAuth = async () => {
     if (!isConnected || !account) {

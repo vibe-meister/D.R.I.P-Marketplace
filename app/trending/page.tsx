@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
   TrendingUp, 
-  Fire, 
+  Flame, 
   Star, 
   Heart, 
   Eye, 
@@ -155,7 +155,7 @@ export default function TrendingPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Fire className="w-6 h-6 text-pink-500" />
+              <Flame className="w-6 h-6 text-pink-500" />
               <h2 className="text-2xl font-bold text-white">Top Performers</h2>
             </div>
             <div className="flex bg-white/10 rounded-lg p-1">
@@ -251,7 +251,7 @@ export default function TrendingPage() {
                       </div>
                       {item.rank <= 3 && (
                         <div className="flex items-center space-x-1 text-pink-400">
-                          <Fire className="w-4 h-4" />
+                          <Flame className="w-4 h-4" />
                           <span className="text-sm font-medium">Hot</span>
                         </div>
                       )}
@@ -287,7 +287,7 @@ export default function TrendingPage() {
 
           <div className="glass rounded-xl p-6 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-teal-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Fire className="w-8 h-8 text-white" />
+              <Flame className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-2xl font-bold gradient-text mb-2">1,234</h3>
             <p className="text-white/60">Active Creators</p>

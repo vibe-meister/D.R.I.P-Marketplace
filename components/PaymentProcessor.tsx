@@ -41,7 +41,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
 
     try {
       // Check if MetaMask is available
-      if (typeof window.ethereum === 'undefined') {
+      if (typeof window.ethereum === 'undefined' || !window.ethereum) {
         throw new Error('MetaMask is not installed')
       }
 
@@ -95,10 +95,13 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
     }
   }
 
-  const waitForTransactionConfirmation = async (txHash: string) => {
+  const waitForTransactionConfirmation = async (txHash: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       const checkConfirmation = async () => {
         try {
+          if (!window.ethereum) {
+            throw new Error('MetaMask not available')
+          }
           const receipt = await window.ethereum.request({
             method: 'eth_getTransactionReceipt',
             params: [txHash],
