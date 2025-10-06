@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL) {
+    if (!process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }

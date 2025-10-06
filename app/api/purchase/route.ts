@@ -6,7 +6,7 @@ import { validateWalletAddress, validateTransactionHash, logSecurityEvent } from
 export async function POST(request: NextRequest) {
   try {
     // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL) {
+    if (!process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL) {
+    if (!process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }
