@@ -7,6 +7,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 // Get all content
 export async function GET(request: NextRequest) {
   try {
+    // Check if database is available (not during build)
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const search = searchParams.get('search')
@@ -63,6 +71,14 @@ export async function GET(request: NextRequest) {
 // Create new content
 export async function POST(request: NextRequest) {
   try {
+    // Check if database is available (not during build)
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     const authHeader = request.headers.get('authorization')
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(

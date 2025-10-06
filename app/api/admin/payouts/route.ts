@@ -4,6 +4,14 @@ import { prisma } from '@/lib/prisma'
 // Get pending payouts for creators
 export async function GET(request: NextRequest) {
   try {
+    // Check if database is available (not during build)
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     const pendingPayouts = await prisma.earnings.findMany({
       where: {
         status: 'pending_payout'
@@ -54,6 +62,14 @@ export async function GET(request: NextRequest) {
 // Process payouts to creators
 export async function POST(request: NextRequest) {
   try {
+    // Check if database is available (not during build)
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     const { creatorId, earningsIds } = await request.json()
 
     if (!creatorId || !earningsIds || !Array.isArray(earningsIds)) {
