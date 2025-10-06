@@ -6,8 +6,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL || !prisma) {
+    // Skip during build process
+    if (process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }
@@ -74,8 +74,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL || !prisma) {
+    // Skip during build process
+    if (process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }

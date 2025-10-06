@@ -5,8 +5,8 @@ import { validateWalletAddress, validateTransactionHash, logSecurityEvent } from
 // Process purchase and unlock content
 export async function POST(request: NextRequest) {
   try {
-    // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL || !prisma) {
+    // Skip during build process
+    if (process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }
@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
 // Get user's purchased content
 export async function GET(request: NextRequest) {
   try {
-    // Check if database is available (not during build)
-    if (!process.env.DATABASE_URL || !prisma) {
+    // Skip during build process
+    if (process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }
