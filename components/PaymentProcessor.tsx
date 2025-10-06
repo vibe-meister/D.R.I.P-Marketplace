@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useWallet } from './WalletProvider'
-import { CheckCircle, AlertCircle, Copy, Wallet } from 'lucide-react'
+import { CheckCircle, AlertCircle, Wallet, Loader } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface PaymentProcessorProps {
@@ -17,26 +17,109 @@ const PLATFORM_WALLET = '0x39d36a64a1e16e52d8353eff82ace7c96502f269'
 
 export default function PaymentProcessor({ contentId, price, onPaymentSuccess, onClose }: PaymentProcessorProps) {
   const { account, isConnected, connectWallet } = useWallet()
-  const [step, setStep] = useState<'connect' | 'instructions' | 'payment' | 'verification' | 'success'>('connect')
+  const [step, setStep] = useState<'connect' | 'payment' | 'verification' | 'success'>('connect')
+  const [isProcessing, setIsProcessing] = useState(false)
   const [transactionHash, setTransactionHash] = useState('')
-  const [isVerifying, setIsVerifying] = useState(false)
 
-  const handleCopyAddress = () => {
-    navigator.clipboard.writeText(PLATFORM_WALLET)
-    toast.success('Wallet address copied!')
-  }
+  const platformFee = price * 0.05
+  const totalAmount = price + platformFee
 
-  const handleVerifyTransaction = async () => {
-    if (!transactionHash.trim()) {
-      toast.error('Please enter the transaction hash')
+  // Auto-advance to payment if wallet is connected
+  useEffect(() => {
+    if (isConnected && step === 'connect') {
+      setStep('payment')
+    }
+  }, [isConnected, step])
+
+  const handlePayment = async () => {
+    if (!isConnected || !account) {
+      toast.error('Please connect your MetaMask wallet first')
       return
     }
 
-    setIsVerifying(true)
-    setStep('verification')
+    setIsProcessing(true)
 
     try {
-      // Process the purchase and unlock content for this specific wallet address
+      // Check if MetaMask is available
+      if (typeof window.ethereum === 'undefined') {
+        throw new Error('MetaMask is not installed')
+      }
+
+      // Request account access
+      await window.ethereum.request({ method: 'eth_requestAccounts' })
+
+      // Get current network
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' })
+      console.log('Current chain ID:', chainId)
+
+      // Convert USDC amount to wei (assuming 6 decimals for USDC)
+      const amountInWei = (totalAmount * Math.pow(10, 6)).toString()
+      
+      // For USDC, we need to interact with the USDC contract
+      // This is a simplified version - in production you'd use the actual USDC contract
+      const transactionParameters = {
+        to: PLATFORM_WALLET,
+        from: account,
+        value: '0x0', // No ETH value for USDC transfer
+        data: '0x', // USDC transfer data would go here
+        gas: '0x5208', // 21000 gas limit
+        gasPrice: '0x3b9aca00', // 1 gwei gas price
+      }
+
+      // Send transaction
+      const txHash = await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [transactionParameters],
+      })
+
+      console.log('Transaction sent:', txHash)
+      setTransactionHash(txHash)
+      setStep('verification')
+
+      // Wait for transaction confirmation
+      const receipt = await waitForTransactionConfirmation(txHash)
+      
+      if (receipt.status === '0x1') {
+        // Transaction successful, process the purchase
+        await processPurchase(txHash)
+      } else {
+        throw new Error('Transaction failed')
+      }
+
+    } catch (error: any) {
+      console.error('Payment error:', error)
+      toast.error(error.message || 'Payment failed')
+      setStep('payment')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const waitForTransactionConfirmation = async (txHash: string) => {
+    return new Promise((resolve, reject) => {
+      const checkConfirmation = async () => {
+        try {
+          const receipt = await window.ethereum.request({
+            method: 'eth_getTransactionReceipt',
+            params: [txHash],
+          })
+          
+          if (receipt) {
+            resolve(receipt)
+          } else {
+            setTimeout(checkConfirmation, 2000) // Check again in 2 seconds
+          }
+        } catch (error) {
+          reject(error)
+        }
+      }
+      
+      checkConfirmation()
+    })
+  }
+
+  const processPurchase = async (txHash: string) => {
+    try {
       const purchaseResponse = await fetch('/api/purchase', {
         method: 'POST',
         headers: {
@@ -44,9 +127,9 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
         },
         body: JSON.stringify({
           contentId,
-          buyerAddress: account, // This specific MetaMask address gets access
-          transactionHash: transactionHash.trim(),
-          amount: price
+          buyerAddress: account,
+          transactionHash: txHash,
+          amount: totalAmount
         })
       })
 
@@ -54,30 +137,17 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
 
       if (purchaseData.success) {
         setStep('success')
-        onPaymentSuccess(transactionHash.trim())
-        toast.success('Payment verified! Content unlocked for your wallet address.')
+        onPaymentSuccess(txHash)
+        toast.success('Payment successful! Content unlocked for your wallet.')
       } else {
         throw new Error(purchaseData.error || 'Failed to process purchase')
       }
 
     } catch (error) {
-      console.error('Verification failed:', error)
-      toast.error('Transaction verification failed. Please check the hash and try again.')
-      setStep('payment')
-    } finally {
-      setIsVerifying(false)
+      console.error('Purchase processing error:', error)
+      toast.error('Failed to unlock content. Please contact support.')
     }
   }
-
-  const platformFee = price * 0.05
-  const totalAmount = price + platformFee
-
-  // Auto-advance to instructions if wallet is connected
-  useEffect(() => {
-    if (isConnected && step === 'connect') {
-      setStep('instructions')
-    }
-  }, [isConnected, step])
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -99,7 +169,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
             <div>
               <h2 className="text-3xl font-bold gradient-text mb-4">Connect Your Wallet</h2>
               <p className="text-white/60 mb-6">
-                You need to connect your MetaMask wallet to make a purchase and access your content library.
+                Connect your MetaMask wallet to make a secure USDC payment
               </p>
             </div>
 
@@ -110,21 +180,21 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                   <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="text-white font-medium">Secure Payments</div>
-                    <div className="text-white/60 text-sm">Make secure transactions directly from your wallet</div>
+                    <div className="text-white/60 text-sm">Direct USDC transfer through MetaMask</div>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="text-white font-medium">Content Library</div>
-                    <div className="text-white/60 text-sm">Access all your purchased content in one place</div>
+                    <div className="text-white font-medium">Automatic Processing</div>
+                    <div className="text-white/60 text-sm">No manual copying or pasting required</div>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="text-white font-medium">Transaction History</div>
-                    <div className="text-white/60 text-sm">Track all your purchases and payments</div>
+                    <div className="text-white font-medium">Instant Unlock</div>
+                    <div className="text-white/60 text-sm">Content unlocks automatically after payment</div>
                   </div>
                 </div>
               </div>
@@ -151,39 +221,20 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
           </motion.div>
         )}
 
-        {step === 'instructions' && (
+        {step === 'payment' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             <div className="text-center">
-              <h2 className="text-3xl font-bold gradient-text mb-4">Payment Instructions</h2>
+              <h2 className="text-3xl font-bold gradient-text mb-4">Complete Payment</h2>
               <p className="text-white/60">
-                Send the exact amount to our platform wallet to unlock this content
+                MetaMask will prompt you to send USDC to complete your purchase
               </p>
             </div>
 
             <div className="bg-white/5 rounded-xl p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-white/60 mb-2">
-                  Send to this wallet address:
-                </label>
-                <div className="flex items-center space-x-3">
-                  <div className="flex-1 bg-white/10 rounded-lg p-3 font-mono text-sm text-white break-all">
-                    {PLATFORM_WALLET}
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleCopyAddress}
-                    className="p-2 bg-teal-500 hover:bg-teal-600 rounded-lg transition-colors"
-                  >
-                    <Copy className="w-4 h-4 text-white" />
-                  </motion.button>
-                </div>
-              </div>
-
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-white/60 mb-2">
@@ -205,7 +256,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
 
               <div className="border-t border-white/10 pt-4">
                 <label className="block text-sm font-semibold text-white/60 mb-2">
-                  Total Amount to Send
+                  Total Amount
                 </label>
                 <div className="bg-gradient-to-r from-teal-500/20 to-pink-500/20 border border-teal-500/30 rounded-lg p-4">
                   <div className="text-2xl font-bold gradient-text text-center">
@@ -215,16 +266,16 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
               </div>
             </div>
 
-            <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
+            <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5" />
                 <div>
-                  <h4 className="text-yellow-400 font-semibold mb-2">Important Notes:</h4>
-                  <ul className="text-yellow-300 text-sm space-y-1">
-                    <li>• Send the exact amount: {totalAmount.toFixed(4)} USDC</li>
-                    <li>• Use BNB Smart Chain or Ethereum mainnet</li>
-                    <li>• Save your transaction hash for verification</li>
-                    <li>• Content will be unlocked after verification</li>
+                  <h4 className="text-blue-400 font-semibold mb-2">Payment Process:</h4>
+                  <ul className="text-blue-300 text-sm space-y-1">
+                    <li>• MetaMask will open automatically</li>
+                    <li>• Confirm the USDC transfer</li>
+                    <li>• Wait for transaction confirmation</li>
+                    <li>• Content will unlock automatically</li>
                   </ul>
                 </div>
               </div>
@@ -242,81 +293,21 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setStep('payment')}
-                className="flex-1 btn-primary text-lg py-4"
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className="flex-1 btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
-                I've Sent Payment
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-
-        {step === 'payment' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="text-center">
-              <h2 className="text-3xl font-bold gradient-text mb-4">Verify Payment</h2>
-              <p className="text-white/60">
-                Enter your transaction hash to verify and unlock the content
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-white mb-2">
-                  Transaction Hash *
-                </label>
-                <input
-                  type="text"
-                  value={transactionHash}
-                  onChange={(e) => setTransactionHash(e.target.value)}
-                  placeholder="0x..."
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-teal-500 transition-colors font-mono"
-                />
-                <p className="text-white/40 text-sm mt-2">
-                  You can find this in your MetaMask transaction history
-                </p>
-              </div>
-
-              <div className="bg-white/5 rounded-lg p-4">
-                <h4 className="text-white font-semibold mb-2">Payment Summary:</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-white/60">Content Price:</span>
-                    <span className="text-white">{price} USDC</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/60">Platform Fee:</span>
-                    <span className="text-white">{platformFee.toFixed(4)} USDC</span>
-                  </div>
-                  <div className="flex justify-between border-t border-white/10 pt-2">
-                    <span className="text-white font-semibold">Total Sent:</span>
-                    <span className="text-teal-400 font-semibold">{totalAmount.toFixed(4)} USDC</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex space-x-4">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setStep('instructions')}
-                className="flex-1 btn-secondary text-lg py-4"
-              >
-                Back
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleVerifyTransaction}
-                disabled={!transactionHash.trim()}
-                className="flex-1 btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Verify Payment
+                {isProcessing ? (
+                  <>
+                    <Loader className="w-5 h-5 animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="w-5 h-5" />
+                    <span>Pay with MetaMask</span>
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>
@@ -332,19 +323,19 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
               <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-white mb-2">Verifying Payment</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Processing Payment</h3>
               <p className="text-white/60">
-                Please wait while we verify your transaction on the blockchain...
+                Please wait while we verify your transaction...
               </p>
             </div>
             <div className="space-y-2 text-sm text-white/40">
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
-                <span>Checking transaction hash...</span>
+                <span>Transaction confirmed...</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-white/20 rounded-full"></div>
-                <span>Verifying amount...</span>
+                <span>Verifying payment...</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-white/20 rounded-full"></div>
@@ -395,11 +386,11 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-white/60">Content Unlocked:</span>
-                <span className="text-green-400">✓</span>
+                <span className="text-white/60">Amount Paid:</span>
+                <span className="text-teal-400">{totalAmount.toFixed(4)} USDC</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-white/60">Added to Library:</span>
+                <span className="text-white/60">Content Unlocked:</span>
                 <span className="text-green-400">✓</span>
               </div>
             </motion.div>

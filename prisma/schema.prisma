@@ -44,6 +44,7 @@ model Content {
   creatorId   String
   creator     Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   purchases   Purchase[]
+  userLibrary UserLibrary[]
 
   @@map("content")
 }
@@ -64,6 +65,7 @@ model Purchase {
   content   Content @relation(fields: [contentId], references: [id])
   buyerId   String
   buyer     Creator @relation(fields: [buyerId], references: [id])
+  userLibrary UserLibrary[]
 
   @@map("purchases")
 }
@@ -90,6 +92,10 @@ model UserLibrary {
   purchaseId String
   accessUrl  String   // URL to access the content
   createdAt DateTime @default(now())
+
+  // Relations
+  content   Content @relation(fields: [contentId], references: [id])
+  purchase  Purchase @relation(fields: [purchaseId], references: [id])
 
   @@map("user_library")
 }
