@@ -43,10 +43,47 @@ export default function MarketplacePage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null)
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [contentItems, setContentItems] = useState<ContentItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const categories = ['All', 'Art', 'Video', 'Music', 'Photography', 'Education', 'Gaming', 'Lifestyle']
 
-  const contentItems: ContentItem[] = [
+  // Fetch content from API
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch('/api/content')
+        const data = await response.json()
+        
+        if (data.content) {
+          // Transform API data to match ContentItem interface
+          const transformedContent = data.content.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            creator: item.creator.username,
+            price: item.price.toString(),
+            image: item.thumbnailUrl || item.fileUrl,
+            category: item.category,
+            likes: 0, // You can add likes to your schema later
+            views: item._count?.purchases || 0,
+            rating: 5, // You can add ratings to your schema later
+            description: item.description,
+            isPurchased: false // You can check user's library to determine this
+          }))
+          setContentItems(transformedContent)
+        }
+      } catch (error) {
+        console.error('Failed to fetch content:', error)
+        toast.error('Failed to load marketplace content')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchContent()
+  }, [])
+
+  const contentItems_backup: ContentItem[] = [
     {
       id: 1,
       title: 'Exclusive Digital Art Collection',
@@ -149,6 +186,14 @@ export default function MarketplacePage() {
     }
     setSelectedItem(item)
     setShowPurchaseModal(true)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="pt-20 min-h-screen flex items-center justify-center">
+        <div className="spinner"></div>
+      </div>
+    )
   }
 
   return (
