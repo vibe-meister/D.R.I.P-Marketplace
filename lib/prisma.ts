@@ -1,14 +1,18 @@
-import { PrismaClient } from '@prisma/client'
+// Only import and create Prisma client if DATABASE_URL is available
+let prisma: any = null
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+if (process.env.DATABASE_URL) {
+  const { PrismaClient } = require('@prisma/client')
+  
+  const globalForPrisma = globalThis as unknown as {
+    prisma: any | undefined
+  }
+
+  prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+  if (process.env.NODE_ENV !== 'production') {
+    globalForPrisma.prisma = prisma
+  }
 }
 
-// Only create Prisma client if DATABASE_URL is available
-export const prisma = globalForPrisma.prisma ?? (
-  process.env.DATABASE_URL ? new PrismaClient() : null
-)
-
-if (process.env.NODE_ENV !== 'production' && prisma) {
-  globalForPrisma.prisma = prisma
-}
+export { prisma }
