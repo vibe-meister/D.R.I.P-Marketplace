@@ -190,7 +190,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                     Content Price
                   </label>
                   <div className="bg-white/10 rounded-lg p-3 text-white font-semibold">
-                    {price} ETH
+                    {price} USDC
                   </div>
                 </div>
                 <div>
@@ -198,7 +198,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                     Platform Fee (5%)
                   </label>
                   <div className="bg-white/10 rounded-lg p-3 text-white font-semibold">
-                    {platformFee.toFixed(4)} ETH
+                    {platformFee.toFixed(4)} USDC
                   </div>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                 </label>
                 <div className="bg-gradient-to-r from-teal-500/20 to-pink-500/20 border border-teal-500/30 rounded-lg p-4">
                   <div className="text-2xl font-bold gradient-text text-center">
-                    {totalAmount.toFixed(4)} ETH
+                    {totalAmount.toFixed(4)} USDC
                   </div>
                 </div>
               </div>
@@ -221,8 +221,8 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                 <div>
                   <h4 className="text-yellow-400 font-semibold mb-2">Important Notes:</h4>
                   <ul className="text-yellow-300 text-sm space-y-1">
-                    <li>• Send the exact amount: {totalAmount.toFixed(4)} ETH</li>
-                    <li>• Use the correct network (Ethereum mainnet)</li>
+                    <li>• Send the exact amount: {totalAmount.toFixed(4)} USDC</li>
+                    <li>• Use BNB Smart Chain or Ethereum mainnet</li>
                     <li>• Save your transaction hash for verification</li>
                     <li>• Content will be unlocked after verification</li>
                   </ul>
@@ -286,15 +286,15 @@ export default function PaymentProcessor({ contentId, price, onPaymentSuccess, o
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-white/60">Content Price:</span>
-                    <span className="text-white">{price} ETH</span>
+                    <span className="text-white">{price} USDC</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/60">Platform Fee:</span>
-                    <span className="text-white">{platformFee.toFixed(4)} ETH</span>
+                    <span className="text-white">{platformFee.toFixed(4)} USDC</span>
                   </div>
                   <div className="flex justify-between border-t border-white/10 pt-2">
                     <span className="text-white font-semibold">Total Sent:</span>
-                    <span className="text-teal-400 font-semibold">{totalAmount.toFixed(4)} ETH</span>
+                    <span className="text-teal-400 font-semibold">{totalAmount.toFixed(4)} USDC</span>
                   </div>
                 </div>
               </div>

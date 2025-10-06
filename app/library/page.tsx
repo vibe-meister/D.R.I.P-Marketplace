@@ -216,7 +216,7 @@ export default function LibraryPage() {
                       <Calendar className="w-4 h-4" />
                       <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                     </div>
-                    <span className="text-teal-400 font-semibold">{item.content.price} ETH</span>
+                    <span className="text-teal-400 font-semibold">{item.content.price} USDC</span>
                   </div>
 
                   <div className="flex space-x-3">
