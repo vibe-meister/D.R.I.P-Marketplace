@@ -6,8 +6,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Skip during build process
-    if (process.env.NEXT_PHASE === 'phase-production-build' || !process.env.DATABASE_URL || !prisma) {
+    // Check if database is available
+    if (!process.env.DATABASE_URL || !prisma) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 503 }
